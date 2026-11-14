@@ -1,0 +1,33 @@
+{
+    "homepage": "https://pc.qq.com/detail/14/detail_32414.html",
+    "description": "百度网盘",
+    "version": "8.9.2.101",
+    "license": "https://pan.baidu.com/disk/main#/protocol/duty_mobi",
+    "url": "https://vcdn.qzz.io/pcmgr/download/32414#/BaiduNetdisk-8.9.2.101.7z",
+    "hash": "4e5f59b456442ab39cf3766943c235966d2df2b54c1718e9f632104cd0cf375d",
+    "shortcuts": [
+        [
+            "BaiduNetdisk.exe",
+            "百度网盘"
+        ]
+    ],
+    "persist": [
+        "users",
+        "data"
+    ],
+    "post_install": [
+        "Remove-Item \"$dir\\`$PLUGINSDIR\" -Recurse",
+        "Remove-Item \"$dir\\`$TEMP\" -Recurse",
+        "if (-not (Test-Path \"$Env:APPDATA\\baidunetdisk\")) { ",
+        "  New-Item -ItemType Junction -Path \"$Env:APPDATA\\baidunetdisk\" -Value \"$persist_dir\\data\" | Out-Null",
+        "}"
+    ],
+    "post_uninstall": "if ($purge -and (Test-Path \"$Env:APPDATA\\baidunetdisk\")) { Remove-Item -Recurse -Force \"$Env:APPDATA\\baidunetdisk\" }",
+    "checkver": {
+        "url": "https://vcdn.qzz.io/pcmgr/32414",
+        "jsonpath": "$.version"
+    },
+    "autoupdate": {
+        "url": "https://vcdn.qzz.io/pcmgr/download/32414#/BaiduNetdisk-$version.7z"
+    }
+}

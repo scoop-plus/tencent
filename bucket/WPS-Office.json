@@ -1,0 +1,91 @@
+{
+    "homepage": "https://pc.qq.com/detail/15/detail_1215.html",
+    "description": "WPS Office是一款由金山软件开发的办公软件 包含文字、表格、演示等组件 支持多平台使用。",
+    "version": "12.1.0.29161",
+    "license": "Freeware",
+    "url": "https://vcdn.qzz.io/pcmgr/download/1215#/WPS-Office.7z",
+    "hash": "151cacd145c695cab0ab52e85217396c07ceed204dd78e76c3a61563dd572a5e",
+    "extract_dir": "$_11_",
+    "bin": "wpsoffice.exe",
+    "shortcuts": [
+        [
+            "wpsoffice.exe",
+            "WPS Office"
+        ],
+        [
+            "wps.exe",
+            "WPS 文字"
+        ],
+        [
+            "et.exe",
+            "WPS 表格"
+        ],
+        [
+            "wpp.exe",
+            "WPS 演示"
+        ],
+        [
+            "ksomisc.exe",
+            "WPS 配置工具"
+        ]
+    ],
+    "persist": "data",
+    "pre_install": [
+        "Expand-7zipArchive \"$dir\\`$EXEFILE\" -Switches '-t#'",
+        "Remove-Item \"$dir\\*\" -Exclude '4.7z','2.7z' -Recurse",
+        "Expand-7zipArchive \"$dir\\4.7z\" -ExtractDir 'office6' -Removal",
+        "Expand-7zipArchive \"$dir\\2.7z\" -ExtractDir 'CONTROL\\office6' -Removal"
+    ],
+    "post_install": [
+        "$wpsPath = \"$dir\\wps.exe\"",
+        "if (Test-Path $wpsPath) {",
+        "    $assoc = @{ 'doc'='WPS.Doc'; 'docx'='WPS.Docx' }",
+        "    foreach ($ext in $assoc.Keys) {",
+        "        New-Item -Path \"HKCU:\\Software\\Classes\\.$ext\" -Force | Out-Null",
+        "        Set-ItemProperty -Path \"HKCU:\\Software\\Classes\\.$ext\" -Name '(Default)' -Value $assoc[$ext]",
+        "        New-Item -Path \"HKCU:\\Software\\Classes\\$($assoc[$ext])\\shell\\open\\command\" -Force | Out-Null",
+        "        Set-ItemProperty -Path \"HKCU:\\Software\\Classes\\$($assoc[$ext])\\shell\\open\\command\" -Name '(Default)' -Value \"`\"$wpsPath`\" `\"%1`\"\"",
+        "        New-Item -Path \"HKCU:\\Software\\Classes\\$($assoc[$ext])\\DefaultIcon\" -Force | Out-Null",
+        "        Set-ItemProperty -Path \"HKCU:\\Software\\Classes\\$($assoc[$ext])\\DefaultIcon\" -Name '(Default)' -Value \"`\"$wpsPath`\",0\"",
+        "    }",
+        "}",
+        "$etPath = \"$dir\\et.exe\"",
+        "if (Test-Path $etPath) {",
+        "    $assoc = @{ 'xls'='WPS.Xls'; 'xlsx'='WPS.Xlsx' }",
+        "    foreach ($ext in $assoc.Keys) {",
+        "        New-Item -Path \"HKCU:\\Software\\Classes\\.$ext\" -Force | Out-Null",
+        "        Set-ItemProperty -Path \"HKCU:\\Software\\Classes\\.$ext\" -Name '(Default)' -Value $assoc[$ext]",
+        "        New-Item -Path \"HKCU:\\Software\\Classes\\$($assoc[$ext])\\shell\\open\\command\" -Force | Out-Null",
+        "        Set-ItemProperty -Path \"HKCU:\\Software\\Classes\\$($assoc[$ext])\\shell\\open\\command\" -Name '(Default)' -Value \"`\"$etPath`\" `\"%1`\"\"",
+        "        New-Item -Path \"HKCU:\\Software\\Classes\\$($assoc[$ext])\\DefaultIcon\" -Force | Out-Null",
+        "        Set-ItemProperty -Path \"HKCU:\\Software\\Classes\\$($assoc[$ext])\\DefaultIcon\" -Name '(Default)' -Value \"`\"$etPath`\",0\"",
+        "    }",
+        "}",
+        "$wppPath = \"$dir\\wpp.exe\"",
+        "if (Test-Path $wppPath) {",
+        "    $assoc = @{ 'ppt'='WPS.Ppt'; 'pptx'='WPS.Pptx' }",
+        "    foreach ($ext in $assoc.Keys) {",
+        "        New-Item -Path \"HKCU:\\Software\\Classes\\.$ext\" -Force | Out-Null",
+        "        Set-ItemProperty -Path \"HKCU:\\Software\\Classes\\.$ext\" -Name '(Default)' -Value $assoc[$ext]",
+        "        New-Item -Path \"HKCU:\\Software\\Classes\\$($assoc[$ext])\\shell\\open\\command\" -Force | Out-Null",
+        "        Set-ItemProperty -Path \"HKCU:\\Software\\Classes\\$($assoc[$ext])\\shell\\open\\command\" -Name '(Default)' -Value \"`\"$wppPath`\" `\"%1`\"\"",
+        "        New-Item -Path \"HKCU:\\Software\\Classes\\$($assoc[$ext])\\DefaultIcon\" -Force | Out-Null",
+        "        Set-ItemProperty -Path \"HKCU:\\Software\\Classes\\$($assoc[$ext])\\DefaultIcon\" -Name '(Default)' -Value \"`\"$wppPath`\",0\"",
+        "    }",
+        "}"
+    ],
+    "post_uninstall": [
+        "if ($purge -and (Test-Path \"$Env:APPDATA\\WPS Office\")) { Remove-Item -Recurse -Force \"$Env:APPDATA\\WPS Office\" }",
+        "$exts = @('doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx')",
+        "$types = @('WPS.Doc', 'WPS.Docx', 'WPS.Xls', 'WPS.Xlsx', 'WPS.Ppt', 'WPS.Pptx')",
+        "foreach ($ext in $exts) { if (Test-Path \"HKCU:\\Software\\Classes\\.$ext\") { Remove-Item -Path \"HKCU:\\Software\\Classes\\.$ext\" -Recurse -ErrorAction SilentlyContinue } }",
+        "foreach ($type in $types) { if (Test-Path \"HKCU:\\Software\\Classes\\$type\") { Remove-Item -Path \"HKCU:\\Software\\Classes\\$type\" -Recurse -ErrorAction SilentlyContinue } }"
+    ],
+    "checkver": {
+        "url": "https://vcdn.qzz.io/pcmgr/1215",
+        "jsonpath": "$.version"
+    },
+    "autoupdate": {
+        "url": "https://vcdn.qzz.io/pcmgr/download/1215#/WPS-Office.7z"
+    }
+}

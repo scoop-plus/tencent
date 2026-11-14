@@ -1,0 +1,33 @@
+{
+    "version": "6.9.3.1875",
+    "description": "阿里云盘是一款速度快、不打扰、够安全、易于分享的网盘，由阿里巴巴集团出品",
+    "homepage": "https://pc.qq.com/detail/16/detail_28156.html",
+    "license": {
+        "identifier": "EULA",
+        "url": "https://alipan.com/protocol/service"
+    },
+    "url": "https://vcdn.qzz.io/pcmgr/download/28156#/aDrive.7z",
+    "hash": "3ccbdfa920528bd0295c1197a84bcd552cc1cfe2bf2ad722ace7d5dd93bdb281",
+    "shortcuts": [
+        [
+            "aDrive.exe",
+            "阿里云盘"
+        ]
+    ],
+    "persist": "data",
+    "post_install": [
+        "Remove-Item -Force -Recurse \"$dir\\`$PLUGINSDIR\"",
+        "Remove-Item -Force -Recurse \"$dir\\`$TEMP\"",
+        "if (-not (Test-Path \"$Env:APPDATA\\aDrive\")) { ",
+        "  New-Item -ItemType Junction -Path \"$Env:APPDATA\\aDrive\" -Value \"$persist_dir\\data\" | Out-Null",
+        "}"
+    ],
+    "post_uninstall": "if ($purge -and (Test-Path \"$Env:APPDATA\\aDrive\")) { Remove-Item -Recurse -Force \"$Env:APPDATA\\aDrive\" }",
+    "checkver": {
+        "url": "https://vcdn.qzz.io/pcmgr/28156",
+        "jsonpath": "$.version"
+    },
+    "autoupdate": {
+        "url": "https://vcdn.qzz.io/pcmgr/download/28156#/aDrive.7z"
+    }
+}
